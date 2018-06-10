@@ -1,0 +1,65 @@
+function [] = gyro
+close all  
+
+%%%%
+%Constants 
+Re = 1;
+B0 = 1;
+q = 1;
+m = 1; 
+dt = .1;
+t = 0 ;  
+h = animatedline;
+view(43,24);
+
+%%%%
+%define the magnetic dipole in cartesian coordinates
+syms x y z
+r=sqrt(x^2+y^2+z^2);
+B = -(B0*Re^3/r^5)*[3*x*z 3*y*z (2*z^2 - x^2 - y^2)];
+dB =divergence(B,[x y z]);
+
+%%%%%%
+%Velocity treatment
+syms v1 v2 v3 
+v =[v1 v2 v3];
+vpara = dot(v, B/norm(B));
+vperpen = v - vpara;
+size(vperpen)
+%%%%%
+%guiding centre eqns
+magv= sqrt(dot(v, v));
+magvprara = sqrt(dot(vpara, vpara));
+magvperpen = sqrt(dot(vperpen, vperpen));
+
+u = (m*magvperpen^2)/(2*sqrt(dot(B,B)));%magmoment
+dvdtpara= -(u/m)*dot((B/norm(B)),dB); 
+dRdt= ((m*magv^2)/(2*q*dot(B,B)))*(1+(vmagpara^2/vmag^2))*coss((B/norm(B)), dB)+ magvpara*(B/ norm(B));
+
+%%%%%
+%initial conditions 
+v1 = 1; v2 = 2; v3 =0; 
+x= 0; y= 0; z= 0; 
+
+%%%% 
+%Loop for trajectory
+%while t < 1
+    %t = t + dt; 
+    %r = sqrt( pos(1)^2 + pos(2)^2 + pos(3)^2);
+    %B = -(B0*Re^3/r^5)*[3*pos(1)*pos(3) 3*pos(2)*pos(3) (2*pos(3)^2 - pos(1)^2 - pos(2)^2)];
+    %gradient(B);
+    %vparalell = dot(v, B/norm(B));
+    %vperpen = v - vparalell;
+    %perpenspeed = norm(vperpen);
+    %a = cross(vperpen, B);
+    %vperpen = vperpen + a*dt; 
+    %vperpen = (vperpen/norm(vperpen))*perpenspeed; 
+    %v = vparalell + vperpen;
+    %disp([ a , v, norm(B)]);
+    %pos = pos + v*dt;
+    %addpoints (h, pos(1), pos(2), pos(3));
+    %drawnow %limitrate %%%this should stop it but oh well... 
+    
+
+%end
+
